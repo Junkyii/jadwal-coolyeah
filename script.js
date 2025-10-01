@@ -193,7 +193,7 @@ function translatePage(lang) {
     // Regenerate dynamic components
     generateClassCards(lang);
     generateLegend(lang);
-    generateMonthlySchedule(lang); 
+    generateMonthlySchedule(lang); // MENGAKTIFKAN LOGIKA JADWAL BULANAN
     
     // Update chart
     if (window.creditChart) {
