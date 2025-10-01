@@ -43,25 +43,34 @@ function generateMonthlySchedule(lang) {
     const container = document.getElementById('monthly-schedule-list');
     container.innerHTML = '';
     
-    // Tentukan tanggal mulai spesifik sesuai permintaan: Rabu, 8 Oktober 2025.
+    // Tentukan tanggal mulai spesifik: Rabu, 8 Oktober 2025.
     // Bulan dalam JavaScript dihitung dari 0 (Januari) hingga 11 (Desember), jadi Oktober adalah 9.
     const startDate = new Date(2025, 9, 8); 
 
-    // Menggunakan 0 untuk Rabu (hari mulai), 2 untuk Jumat (offset 2 hari), dan 3 untuk Sabtu (offset 3 hari)
-    const dayOrder = { "Rabu": 0, "Jumat": 2, "Sabtu": 3 }; 
+    // Offset Hari dari HARI RABU (Hari ke-3 dalam seminggu)
+    // Rabu (3) - Rabu (3) = 0
+    // Jumat (5) - Rabu (3) = 2
+    // Sabtu (6) - Rabu (3) = 3
+    const dayOffset = { 
+        "Rabu": 0,    // Rabu ke Rabu (8 Okt) = 0 hari
+        "Jumat": 2,   // Rabu ke Jumat = 2 hari
+        "Sabtu": 3    // Rabu ke Sabtu = 3 hari
+    }; 
     const maxWeeks = 4; // Target 1 bulan
     
-    // Urutkan data kelas berdasarkan hari dan jam
+    // Urutkan data kelas berdasarkan offset hari dan jam
     const sortedClassData = [...classData].sort((a, b) => {
         const timeA = parseInt(a.time.split('-')[0].replace(':', ''));
         const timeB = parseInt(b.time.split('-')[0].replace(':', ''));
-        if (dayOrder[a.day_id] !== dayOrder[b.day_id]) {
-            return dayOrder[a.day_id] - dayOrder[b.day_id];
+        if (dayOffset[a.day_id] !== dayOffset[b.day_id]) {
+            return dayOffset[a.day_id] - dayOffset[b.day_id];
         }
         return timeA - timeB;
     });
 
     for (let week = 0; week < maxWeeks; week++) {
+        
+        // Tentukan tanggal mulai untuk minggu ini (Rabu)
         let weekStart = new Date(startDate);
         weekStart.setDate(startDate.getDate() + (week * 7));
         
@@ -74,11 +83,11 @@ function generateMonthlySchedule(lang) {
 
         // Tambahkan kelas untuk minggu ini
         sortedClassData.forEach(cls => {
-            // Dapatkan offset hari dari Rabu (hari mulai)
-            const daysToAdd = dayOrder[cls.day_id]; 
+            
+            const daysToAdd = dayOffset[cls.day_id]; 
             let classDate = new Date(weekStart);
             
-            // Tambahkan offset hari ke tanggal mulai minggu ini
+            // Tambahkan offset hari ke tanggal mulai minggu ini (weekStart)
             classDate.setDate(weekStart.getDate() + daysToAdd);
 
             // Format tanggal: DD MMMM YYYY
