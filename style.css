@@ -3,7 +3,7 @@
 body {
     background: #f0f7fa; 
     background-image: radial-gradient(#ffffff, #f0f7fa);
-    font-family: 'Inter', sans-serif; 
+    font-family: sans-serif; 
 }
 
 /* General Card and Element Styling */
@@ -29,7 +29,7 @@ body {
     height: 600px; 
     position: relative;
     width: 100%;
-    /* Gunakan display:grid di sini */
+    /* Mengaktifkan Grid Display */
     display: grid; 
     grid-template-rows: auto 1fr; 
 }
@@ -101,61 +101,7 @@ body {
     transform: translateY(-50%); 
 }
 
-/* --- DARK THEME OVERRIDES --- */
-
-.dark-theme {
-    /* Main Background */
-    background: #1e293b; 
-    background-image: radial-gradient(#1e293b, #0f172a); 
-    color: #f8fafc; 
-}
-
-/* General Text and Elements */
-.dark-theme .text-indigo-900,
-.dark-theme .text-indigo-700,
-.dark-theme .text-gray-800 { color: #93c5fd !important; }
-.dark-theme .text-gray-700,
-.dark-theme .text-gray-500 { color: #cbd5e1 !important; }
-
-/* Dashboard Cards (Main Content Boxes) */
-.dark-theme .bg-white {
-    background-color: #334155 !important; 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Day Headers and Toggles */
-.dark-theme .day-header {
-    background-color: #475569; 
-}
-.dark-theme #lang-toggle,
-.dark-theme #theme-toggle {
-    background-color: #475569 !important; 
-    color: #f8fafc !important;
-}
-
-/* Schedule Grid and Markers */
-.dark-theme .time-marker-text {
-    color: #94a3b8 !important; 
-}
-.dark-theme .day-column {
-    border-right: 1px solid #475569; 
-}
-.dark-theme .time-grid-lines {
-    background-image: 
-        repeating-linear-gradient(to bottom, transparent, transparent 66.6px, #475569 66.6px, #475569 67.6px);
-}
-
-/* Time Slot Text Contrast Fixes (Ensuring visibility on dark backgrounds) */
-.dark-theme .text-blue-800 { color: #93c5fd !important; }
-.dark-theme .text-purple-800 { color: #c084fc !important; }
-.dark-theme .text-green-800 { color: #4ade80 !important; }
-.dark-theme .text-red-800 { color: #f87171 !important; }
-.dark-theme .text-yellow-800 { color: #facc15 !important; }
-.dark-theme .text-pink-800 { color: #f472b6 !important; }
-.dark-theme .text-teal-800 { color: #2dd4bf !important; }
-.dark-theme .text-orange-800 { color: #fb923c !important; }
-
-/* Responsive Adjustments (Keep these for mobile usability) */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .schedule-grid-container {
         grid-template-columns: 1fr;
