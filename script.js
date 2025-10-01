@@ -4,7 +4,7 @@ feather.replace();
 // Data warna untuk Chart.js
 const backgroundColors = ['#3B82F6', '#8B5CF6', '#10B981', '#EF4444', '#F59E0B', '#EC4899', '#14B8A6', '#F97316'];
 
-// Data Kelas
+// Data Kelas (Nama & Hari dalam ID/EN)
 const classData = [
     { id: "KALKULUS", name_id: "KALKULUS", name_en: "CALCULUS", day_id: "Sabtu", day_en: "Saturday", time: "12:50-14:30", credits: 3, color: "orange" },
     { id: "TEKNOLOGI INFORMASI", name_id: "TEKNOLOGI INFORMASI", name_en: "INFORMATION TECHNOLOGY", day_id: "Rabu", day_en: "Wednesday", time: "10:00-11:40", credits: 3, color: "blue" },
@@ -27,6 +27,76 @@ const translations = {
 // Variabel dan Kontainer DOM
 const classListContainer = document.getElementById('class-list-container');
 const legendListContainer = document.getElementById('legend-list');
+
+// --- FUNGSI JADWAL BULANAN (TANGGAL AKURAT) ---
+
+function generateMonthlySchedule(lang) {
+    const container = document.getElementById('monthly-schedule-list');
+    container.innerHTML = '';
+    
+    // Tentukan tanggal mulai spesifik: Rabu, 8 Oktober 2025.
+    const startDate = new Date(2025, 9, 8); 
+
+    // Offset Hari dari HARI RABU
+    const dayOffset = { 
+        "Rabu": 0,   
+        "Jumat": 2,  
+        "Sabtu": 3   
+    }; 
+    const maxWeeks = 4;
+    
+    // Urutkan data kelas berdasarkan offset hari dan jam
+    const sortedClassData = [...classData].sort((a, b) => {
+        const timeA = parseInt(a.time.split('-')[0].replace(':', ''));
+        const timeB = parseInt(b.time.split('-')[0].replace(':', ''));
+        if (dayOffset[a.day_id] !== dayOffset[b.day_id]) {
+            return dayOffset[a.day_id] - dayOffset[b.day_id];
+        }
+        return timeA - timeB;
+    });
+
+    for (let week = 0; week < maxWeeks; week++) {
+        
+        let weekStart = new Date(startDate);
+        weekStart.setDate(startDate.getDate() + (week * 7));
+        
+        const weekHeader = document.createElement('div');
+        weekHeader.className = 'text-center font-bold text-indigo-700 bg-indigo-50 p-2 rounded-lg mt-4 shadow-sm';
+        const weekNumber = lang === 'en' ? `Week ${week + 1}` : `Minggu ${week + 1}`;
+        weekHeader.textContent = weekNumber;
+        container.appendChild(weekHeader);
+
+        sortedClassData.forEach(cls => {
+            
+            const daysToAdd = dayOffset[cls.day_id]; 
+            let classDate = new Date(weekStart);
+            
+            classDate.setDate(weekStart.getDate() + daysToAdd);
+
+            const dateOptions = { day: 'numeric', month: lang === 'en' ? 'short' : 'long', year: 'numeric' };
+            const formattedDate = classDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'id-ID', dateOptions);
+
+            const nameKey = `name_${lang}`;
+            const dayKey = `day_${lang}`;
+            const sksLabel = lang === 'en' ? 'Credits' : 'SKS';
+
+            const card = document.createElement('div');
+            card.className = `schedule-card bg-${cls.color}-50 border-l-4 border-${cls.color}-600 p-3 rounded-lg transition-all duration-300 shadow-sm flex justify-between items-center`;
+            card.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <span class="font-bold text-gray-800 w-24">${formattedDate}</span>
+                    <div>
+                        <h4 class="font-bold text-${cls.color}-800 text-base">${cls[nameKey]}</h4>
+                        <div class="text-sm text-gray-600">${cls[dayKey]} • ${cls.time}</div>
+                    </div>
+                </div>
+                <span class="text-${cls.color}-800 text-xs font-semibold">${cls.credits} ${sksLabel}</span>
+            `;
+            container.appendChild(card);
+        });
+    }
+}
+
 
 // --- FUNGSI GENERATE KARTU DAN LEGEND ---
 
@@ -53,7 +123,6 @@ function generateClassCards(lang) {
     const dayKey = `day_${lang}`;
     const sksLabel = lang === 'en' ? 'Credits' : 'SKS';
 
-    // Sort classes by day and then by time
     const sortedClasses = [...classData].sort((a, b) => {
         const timeA = parseInt(a.time.split('-')[0].replace(':', ''));
         const timeB = parseInt(b.time.split('-')[0].replace(':', ''));
@@ -88,8 +157,9 @@ function generateClassCards(lang) {
 
 function translatePage(lang) {
     const langKey = lang === 'en' ? 'en' : 'id';
+    const langOpposite = lang === 'en' ? 'id' : 'en';
 
-    // Translate static header elements
+    // Translate static header and body elements
     document.querySelectorAll('[data-en]').forEach(el => {
         const translationKey = el.getAttribute(`data-${langKey}`);
         if (translationKey) {
@@ -99,17 +169,20 @@ function translatePage(lang) {
 
     // Translate day headers (Rabu/Wednesday, etc.)
     document.querySelectorAll('.day-header').forEach(el => {
-        const dayName = el.getAttribute('data-id'); // Ambil nama hari dalam ID
+        const dayName = el.getAttribute('data-id'); 
         const translation = translations[dayName] ? translations[dayName][langKey] : dayName;
         el.textContent = translation;
     });
+    
+    // Update language button text
+    const langToggle = document.getElementById('lang-toggle');
+    langToggle.textContent = `${langOpposite.toUpperCase()} / ${lang.toUpperCase()}`;
 
-    // Translate time slot subjects (TEKNOLOGI INFORMASI, etc.)
+    // Update time slot subjects (TEKNOLOGI INFORMASI, etc.)
     document.querySelectorAll('.time-slot > div:first-child').forEach(el => {
-        // Asumsi teks di div ini adalah nama subjek dalam ID
+        // Ambil ID dari index.html
         const subjectID = el.getAttribute('data-id'); 
         
-        // Cari terjemahan di data kelas, bukan di array translations
         const classItem = classData.find(c => c.id === subjectID);
         if (classItem) {
             const subjectName = classItem[`name_${langKey}`];
@@ -120,6 +193,7 @@ function translatePage(lang) {
     // Regenerate dynamic components
     generateClassCards(lang);
     generateLegend(lang);
+    generateMonthlySchedule(lang); 
     
     // Update chart
     if (window.creditChart) {
@@ -137,10 +211,10 @@ function translatePage(lang) {
 // --- INITIALIZATION ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Current lang defaults to ID
-    const currentLang = document.getElementById('lang-toggle').getAttribute('data-current-lang');
+    const langToggle = document.getElementById('lang-toggle');
+    const currentLang = langToggle.getAttribute('data-current-lang');
 
-    // 1. Initialize chart data (moved to function for better control)
+    // 1. Initialize chart data
     const chartLabels = classData.map(cls => cls.name_id);
     const chartDataValues = classData.map(cls => cls.credits);
     const ctx = document.getElementById('creditChart').getContext('2d');
@@ -181,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 2. Language Toggle Handler
-    document.getElementById('lang-toggle').addEventListener('click', (e) => {
+    langToggle.addEventListener('click', (e) => {
         const langToggle = e.currentTarget;
         const newLang = langToggle.getAttribute('data-current-lang') === 'id' ? 'en' : 'id';
         translatePage(newLang);
