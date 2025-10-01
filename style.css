@@ -24,10 +24,13 @@ body {
 
 /* Schedule Container & Grid Setup */
 .schedule-grid-container {
+    /* Custom Grid Layout: 80px for Time | 3 Equal Day Columns */
     grid-template-columns: 80px 1fr 1fr 1fr; 
     height: 600px; 
     position: relative;
     width: 100%;
+    /* Gunakan display:grid di sini */
+    display: grid; 
     grid-template-rows: auto 1fr; 
 }
 

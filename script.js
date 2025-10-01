@@ -93,7 +93,7 @@ function initializeChart() {
 }
 
 
-// --- FUNGSI JADWAL BULANAN ---
+// --- FUNGSI JADWAL BULANAN (TANGGAL AKURAT) ---
 
 function generateMonthlySchedule(lang) {
     const container = document.getElementById('monthly-schedule-list');
@@ -166,6 +166,7 @@ function generateMonthlySchedule(lang) {
 // --- FUNGSI GENERATE KARTU DAN LEGEND (Klasik) ---
 
 function generateLegend(lang) {
+    // ... (Fungsi generateLegend) ...
     legendListContainer.innerHTML = '';
     classData.forEach(cls => {
         const name = translations[cls.id] ? translations[cls.id][lang] : cls.id;
@@ -181,6 +182,7 @@ function generateLegend(lang) {
 }
 
 function generateClassCards(lang) {
+    // ... (Fungsi generateClassCards) ...
     classListContainer.innerHTML = '';
     const dayOrder = { "Rabu": 1, "Jumat": 2, "Sabtu": 3 };
     
@@ -222,6 +224,7 @@ function generateClassCards(lang) {
 // --- FUNGSI TRANSLASI UTAMA ---
 
 function translatePage(lang) {
+    // ... (Fungsi translatePage) ...
     document.querySelectorAll('[data-en]').forEach(el => {
         const translationKey = el.getAttribute(`data-${lang}`);
         if (translationKey) {
@@ -258,6 +261,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeIcon = document.getElementById('theme-icon');
     const langToggle = document.getElementById('lang-toggle');
 
+    // --- INIT CHART FUNCTION ---
+    function initializeChart() {
+        const currentLang = langToggle.getAttribute('data-current-lang');
+        const initialChartLabels = classData.map(cls => translations[cls.id][currentLang]);
+        const chartDataValues = classData.map(cls => cls.credits);
+        const ctx = document.getElementById('creditChart').getContext('2d');
+        const chartTextColor = body.classList.contains('dark-theme') ? '#cbd5e1' : '#475569';
+
+        if (window.creditChart) {
+            window.creditChart.destroy();
+        }
+
+        window.creditChart = new Chart(ctx, { 
+            type: 'doughnut',
+            data: {
+                labels: initialChartLabels,
+                datasets: [{
+                    data: chartDataValues,
+                    backgroundColor: backgroundColors,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { 
+                            boxWidth: 10, 
+                            padding: 15, 
+                            font: { size: 12 },
+                            color: chartTextColor
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const sksLabel = langToggle.getAttribute('data-current-lang') === 'en' ? 'Credits' : 'SKS';
+                                return `${context.label}: ${context.raw} ${sksLabel}`;
+                            }
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+
+
     // 1. Theme Logic (Persistent)
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -271,7 +324,6 @@ document.addEventListener('DOMContentLoaded', () => {
             themeIcon.setAttribute('data-feather', 'moon');
         }
         feather.replace();
-        // Re-initialize chart to update label colors
         initializeChart();
     };
 
@@ -295,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         langToggle.setAttribute('data-current-lang', newLang);
     });
 
-    // 4. Initial content setup (must happen after theme logic)
+    // 4. Initial content setup
     translatePage(langToggle.getAttribute('data-current-lang'));
 
     // 5. Add hover effects to time slots
