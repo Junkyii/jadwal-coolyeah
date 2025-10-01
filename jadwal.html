@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassViz Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-12">
+        <header class="mb-12 text-center">
+            <h1 class="text-5xl font-extrabold text-indigo-900 mb-2">Jadwal Semester 1</h1>
+            <p class="text-xl text-gray-700" data-en="25C2" data-id="25C2">25C2</p>
+            <div class="mt-8 flex justify-center items-center space-x-4">
+                <div class="bg-indigo-600 text-white inline-flex items-center px-6 py-3 rounded-full shadow-lg">
+                    <i data-feather="book-open" class="mr-3 w-5 h-5"></i>
+                    <span class="font-semibold text-lg" data-en="Total Credits:" data-id="Total SKS:">Total SKS:</span>
+                    <span class="ml-2 font-bold text-xl">19 SKS</span>
+                </div>
+                <button id="lang-toggle" class="bg-white text-indigo-600 font-bold px-4 py-2 rounded-full shadow-lg hover:bg-indigo-50 transition duration-300" data-current-lang="id">
+                    <i data-feather="globe" class="inline-block w-4 h-4 mr-1"></i> EN / ID
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+                    <i data-feather="calendar" class="mr-3 text-indigo-500 w-6 h-6"></i>
+                    <span data-en="Weekly Schedule" data-id="Jadwal Mingguan">Jadwal Mingguan</span>
+                </h2>
+                
+                <div class="grid schedule-grid-container">
+                    <div class="time-marker-col">
+                        <h3 class="font-extrabold text-lg text-center mb-4 text-transparent select-none">Time</h3>
+                        <div class="relative h-full pt-4 pb-4"> 
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: -5px">08:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 11.11%">09:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 22.22%">10:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 33.33%">11:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 44.44%">12:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 55.56%">13:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 66.67%">14:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 77.78%">15:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 88.89%">16:00</div>
+                            <div class="time-marker-text absolute w-full pr-2 text-right" style="top: 98.89%">17:00</div>
+                        </div>
+                    </div>
+
+                    <div class="time-grid-lines absolute top-0 left-[80px] w-[calc(100%-80px)] h-full"></div>
+
+                    <div class="day-column relative">
+                        <h3 class="font-extrabold text-lg text-center mb-4 text-indigo-700 day-header" data-en="Wednesday" data-id="Rabu">Rabu</h3>
+                        <div class="time-slot bg-blue-100 border-l-4 border-blue-600" style="top: 22.22%; height: 18.52%">
+                            <div class="font-bold text-blue-800 text-sm" data-en="INFORMATION TECHNOLOGY" data-id="TEKNOLOGI INFORMASI">TEKNOLOGI INFORMASI</div>
+                            <div class="text-xs text-blue-600">10:00-11:40</div>
+                        </div>
+                        <div class="time-slot bg-purple-100 border-l-4 border-purple-600" style="top: 50.00%; height: 18.52%">
+                            <div class="font-bold text-purple-800 text-sm" data-en="EMOTIONAL INTELLIGENCE" data-id="KECERDASAN EMOSIONAL">KECERDASAN EMOSIONAL</div>
+                            <div class="text-xs text-purple-600">12:30-14:10</div>
+                        </div>
+                        <div class="time-slot bg-green-100 border-l-4 border-green-600" style="top: 72.22%; height: 18.52%">
+                            <div class="font-bold text-green-800 text-sm" data-en="INDONESIAN LANGUAGE" data-id="BAHASA INDONESIA">BAHASA INDONESIA</div>
+                            <div class="text-xs text-green-600">14:30-16:10</div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-column relative">
+                        <h3 class="font-extrabold text-lg text-center mb-4 text-indigo-700 day-header" data-en="Friday" data-id="Jumat">Jumat</h3>
+                        <div class="time-slot bg-red-100 border-l-4 border-red-600" style="top: 55.56%; height: 18.52%">
+                            <div class="font-bold text-red-800 text-sm" data-en="ALGORITHM" data-id="ALGORITMA">ALGORITMA</div>
+                            <div class="text-xs text-red-600">13:00-14:40</div>
+                        </div>
+                        <div class="time-slot bg-yellow-100 border-l-4 border-yellow-600" style="top: 77.78%; height: 18.52%">
+                            <div class="font-bold text-yellow-800 text-sm" data-en="ENGLISH 1" data-id="B.INGGRIS 1">B.INGGRIS 1</div>
+                            <div class="text-xs text-yellow-600">15:00-16:40</div>
+                        </div>
+                    </div>
+                    
+                    <div class="day-column relative day-column-last">
+                        <h3 class="font-extrabold text-lg text-center mb-4 text-indigo-700 day-header" data-en="Saturday" data-id="Sabtu">Sabtu</h3>
+                        <div class="time-slot bg-pink-100 border-l-4 border-pink-600" style="top: 0.00%; height: 18.52%">
+                            <div class="font-bold text-pink-800 text-sm" data-en="DIGITAL COMMUNICATION" data-id="KOMUNIKASI DIGITAL">KOMUNIKASI DIGITAL</div>
+                            <div class="text-xs text-pink-600">08:00-09:40</div>
+                        </div>
+                        <div class="time-slot bg-teal-100 border-l-4 border-teal-600" style="top: 42.59%; height: 9.26%">
+                            <div class="font-bold text-teal-800 text-sm" data-en="RELIGIOUS EDUCATION" data-id="PENDIDIKAN AGAMA">PENDIDIKAN AGAMA</div>
+                            <div class="text-xs text-teal-600">11:50-12:40</div>
+                        </div>
+                        <div class="time-slot bg-orange-100 border-l-4 border-orange-600" style="top: 53.70%; height: 18.52%">
+                            <div class="font-bold text-orange-800 text-sm" data-en="CALCULUS" data-id="KALKULUS">KALKULUS</div>
+                            <div class="text-xs text-orange-600">12:50-14:30</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-indigo-500">
+                        <div class="text-3xl font-extrabold text-indigo-600">8</div>
+                        <div class="text-sm text-gray-500" data-en="Total Classes" data-id="Total Mata Kuliah">Total Mata Kuliah</div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-indigo-500">
+                        <div class="text-3xl font-extrabold text-indigo-600">19</div>
+                        <div class="text-sm text-gray-500" data-en="Total Credits (SKS)" data-id="Total SKS">Total SKS</div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center border-b-4 border-indigo-500">
+                        <div class="text-3xl font-extrabold text-indigo-600">3</div>
+                        <div class="text-sm text-gray-500" data-en="Days with Class" data-id="Hari Kuliah">Hari Kuliah</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i data-feather="pie-chart" class="mr-2 text-indigo-500"></i>
+                        <span data-en="Credit Distribution" data-id="Distribusi SKS">Distribusi SKS</span>
+                    </h2>
+                    <div class="h-64">
+                        <canvas id="creditChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i data-feather="calendar-check" class="mr-2 text-indigo-500"></i>
+                        <span data-en="Monthly Class Schedule (4 Weeks)" data-id="Jadwal Kelas Bulanan (4 Minggu)">Jadwal Kelas Bulanan (4 Minggu)</span>
+                    </h2>
+                    <div class="space-y-2" id="monthly-schedule-list">
+                        </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i data-feather="list" class="mr-2 text-indigo-500"></i>
+                        <span data-en="All Class Details" data-id="Detail Semua Mata Kuliah">Detail Semua Mata Kuliah</span>
+                    </h2>
+                    <div class="space-y-4" id="class-list-container">
+                        </div>
+                    
+                    <h3 class="font-extrabold text-xl mt-8 mb-4 text-indigo-700" data-en="Color Legend" data-id="Keterangan Warna">Keterangan Warna</h3>
+                    <div class="grid grid-cols-2 gap-4" id="legend-list">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
