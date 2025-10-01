@@ -37,6 +37,62 @@ let currentLang = document.getElementById('lang-toggle').getAttribute('data-curr
 const classListContainer = document.getElementById('class-list-container');
 const legendListContainer = document.getElementById('legend-list');
 
+
+// --- CHART INITIALIZATION FUNCTION ---
+
+function initializeChart() {
+    const currentLang = document.getElementById('lang-toggle').getAttribute('data-current-lang');
+    const initialChartLabels = classData.map(cls => translations[cls.id][currentLang]);
+    const chartDataValues = classData.map(cls => cls.credits);
+
+    const ctx = document.getElementById('creditChart').getContext('2d');
+    
+    // Determine the text color based on the current theme class
+    const chartTextColor = document.body.classList.contains('dark-theme') ? '#cbd5e1' : '#475569';
+
+    // Destroy existing chart if it exists to prevent memory leaks and ghosting
+    if (window.creditChart) {
+        window.creditChart.destroy();
+    }
+
+    window.creditChart = new Chart(ctx, { 
+        type: 'doughnut',
+        data: {
+            labels: initialChartLabels,
+            datasets: [{
+                data: chartDataValues,
+                backgroundColor: backgroundColors,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { 
+                        boxWidth: 10, 
+                        padding: 15, 
+                        font: { size: 12 },
+                        color: chartTextColor // Set label color based on theme
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const sksLabel = document.getElementById('lang-toggle').getAttribute('data-current-lang') === 'en' ? 'Credits' : 'SKS';
+                            return `${context.label}: ${context.raw} ${sksLabel}`;
+                        }
+                    }
+                }
+            },
+            cutout: '65%'
+        }
+    });
+}
+
+
 // --- FUNGSI JADWAL BULANAN ---
 
 function generateMonthlySchedule(lang) {
@@ -44,13 +100,9 @@ function generateMonthlySchedule(lang) {
     container.innerHTML = '';
     
     // Tentukan tanggal mulai spesifik: Rabu, 8 Oktober 2025.
-    // Bulan dalam JavaScript dihitung dari 0 (Januari) hingga 11 (Desember), jadi Oktober adalah 9.
     const startDate = new Date(2025, 9, 8); 
 
     // Offset Hari dari HARI RABU (Hari ke-3 dalam seminggu)
-    // Rabu (3) - Rabu (3) = 0
-    // Jumat (5) - Rabu (3) = 2
-    // Sabtu (6) - Rabu (3) = 3
     const dayOffset = { 
         "Rabu": 0,    // Rabu ke Rabu (8 Okt) = 0 hari
         "Jumat": 2,   // Rabu ke Jumat = 2 hari
@@ -70,27 +122,22 @@ function generateMonthlySchedule(lang) {
 
     for (let week = 0; week < maxWeeks; week++) {
         
-        // Tentukan tanggal mulai untuk minggu ini (Rabu)
         let weekStart = new Date(startDate);
         weekStart.setDate(startDate.getDate() + (week * 7));
         
-        // Buat header untuk setiap minggu
         const weekHeader = document.createElement('div');
         weekHeader.className = 'text-center font-bold text-indigo-700 bg-indigo-50 p-2 rounded-lg mt-4 shadow-sm';
         const weekNumber = lang === 'en' ? `Week ${week + 1}` : `Minggu ${week + 1}`;
         weekHeader.textContent = weekNumber;
         container.appendChild(weekHeader);
 
-        // Tambahkan kelas untuk minggu ini
         sortedClassData.forEach(cls => {
             
             const daysToAdd = dayOffset[cls.day_id]; 
             let classDate = new Date(weekStart);
             
-            // Tambahkan offset hari ke tanggal mulai minggu ini (weekStart)
             classDate.setDate(weekStart.getDate() + daysToAdd);
 
-            // Format tanggal: DD MMMM YYYY
             const dateOptions = { day: 'numeric', month: lang === 'en' ? 'short' : 'long', year: 'numeric' };
             const formattedDate = classDate.toLocaleDateString(lang === 'en' ? 'en-US' : 'id-ID', dateOptions);
 
@@ -137,7 +184,6 @@ function generateClassCards(lang) {
     classListContainer.innerHTML = '';
     const dayOrder = { "Rabu": 1, "Jumat": 2, "Sabtu": 3 };
     
-    // Sort classes by day and then by time
     const sortedClasses = [...classData].sort((a, b) => {
         const timeA = parseInt(a.time.split('-')[0].replace(':', ''));
         const timeB = parseInt(b.time.split('-')[0].replace(':', ''));
@@ -176,7 +222,6 @@ function generateClassCards(lang) {
 // --- FUNGSI TRANSLASI UTAMA ---
 
 function translatePage(lang) {
-    // Translate static elements using data- attributes
     document.querySelectorAll('[data-en]').forEach(el => {
         const translationKey = el.getAttribute(`data-${lang}`);
         if (translationKey) {
@@ -184,7 +229,6 @@ function translatePage(lang) {
         }
     });
 
-    // Translate schedule blocks 
     document.querySelectorAll('.time-slot > div:first-child').forEach(el => {
         const translationKey = el.getAttribute(`data-${lang}`);
         if (translationKey) {
@@ -192,7 +236,6 @@ function translatePage(lang) {
         }
     });
 
-    // Translate day headers
     document.querySelectorAll('.day-header').forEach(el => {
         const translationKey = el.getAttribute(`data-${lang}`);
         if (translationKey) {
@@ -200,78 +243,68 @@ function translatePage(lang) {
         }
     });
 
-    // Re-generate lists and monthly schedule
     generateClassCards(lang);
     generateLegend(lang);
     generateMonthlySchedule(lang); 
     currentLang = lang;
-    
-    // Update chart
-    if (window.creditChart) {
-        const newLabels = classData.map(cls => translations[cls.id][lang]);
-        window.creditChart.data.labels = newLabels;
-        window.creditChart.options.plugins.tooltip.callbacks.label = function(context) {
-            const sksLabel = currentLang === 'en' ? 'Credits' : 'SKS';
-            return `${context.label}: ${context.raw} ${sksLabel}`;
-        };
-        window.creditChart.update();
-    }
 }
 
-// --- EVENT LISTENERS & INIITALIZERS ---
 
-// Language Toggle Handler
-document.getElementById('lang-toggle').addEventListener('click', () => {
-    const newLang = currentLang === 'id' ? 'en' : 'id';
-    translatePage(newLang);
-    document.getElementById('lang-toggle').setAttribute('data-current-lang', newLang);
-});
+// --- DOM CONTENT LOADED & THEME LOGIC ---
 
-// Initialize chart data
-const initialChartLabels = classData.map(cls => translations[cls.id][currentLang]);
-const chartDataValues = classData.map(cls => cls.credits);
+document.addEventListener('DOMContentLoaded', () => {
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const langToggle = document.getElementById('lang-toggle');
 
-const ctx = document.getElementById('creditChart').getContext('2d');
-window.creditChart = new Chart(ctx, { 
-    type: 'doughnut',
-    data: {
-        labels: initialChartLabels,
-        datasets: [{
-            data: chartDataValues,
-            backgroundColor: backgroundColors,
-            borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'right',
-                labels: { boxWidth: 10, padding: 15, font: { size: 12 } }
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        const sksLabel = currentLang === 'en' ? 'Credits' : 'SKS';
-                        return `${context.label}: ${context.raw} ${sksLabel}`;
-                    }
-                }
-            }
-        },
-        cutout: '65%'
+    // 1. Theme Logic (Persistent)
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            body.classList.add('dark-theme');
+            themeIcon.setAttribute('data-feather', 'sun');
+        } else {
+            body.classList.remove('dark-theme');
+            themeIcon.setAttribute('data-feather', 'moon');
+        }
+        feather.replace();
+        // Re-initialize chart to update label colors
+        initializeChart();
+    };
+
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        applyTheme('dark');
+    } else {
+        applyTheme('light');
     }
-});
 
-// Initial setup
-translatePage(currentLang);
-
-// Add hover effects to time slots (for the fixed elements in index.html)
-document.querySelectorAll('.time-slot').forEach(slot => {
-    slot.addEventListener('mouseenter', () => {
-        slot.style.boxShadow = '0 10px 20px -5px rgba(0, 0, 0, 0.2)';
+    // 2. Theme Toggle Handler
+    themeToggle.addEventListener('click', () => {
+        const newTheme = body.classList.contains('dark-theme') ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
     });
-    slot.addEventListener('mouseleave', () => {
-        slot.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.05)';
+
+    // 3. Language Toggle Handler
+    langToggle.addEventListener('click', () => {
+        const newLang = langToggle.getAttribute('data-current-lang') === 'id' ? 'en' : 'id';
+        translatePage(newLang);
+        langToggle.setAttribute('data-current-lang', newLang);
+    });
+
+    // 4. Initial content setup (must happen after theme logic)
+    translatePage(langToggle.getAttribute('data-current-lang'));
+
+    // 5. Add hover effects to time slots
+    document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.addEventListener('mouseenter', () => {
+            slot.style.boxShadow = '0 10px 20px -5px rgba(0, 0, 0, 0.2)';
+        });
+        slot.addEventListener('mouseleave', () => {
+            slot.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.08)';
+        });
     });
 });

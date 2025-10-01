@@ -1,14 +1,16 @@
 /* Base Styling & Hover Effects */
-/* Body Background Change: Soft, clean light blue-gray */
+/* Body Background: Soft, clean light blue-gray */
 body {
-    background: #f0f7fa; /* Light Sky/Slate background */
-    font-family: 'Inter', sans-serif; /* Recommended for clean look, assuming it's available or use system font */
+    background: #f0f7fa; 
+    background-image: radial-gradient(#ffffff, #f0f7fa);
+    font-family: 'Inter', sans-serif; 
 }
 
-/* Dashboard Cards (The main white containers) */
+/* General Card and Element Styling */
 .bg-white {
-    border-radius: 1.5rem !important; /* Larger radius for a softer look */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Softer overall shadow */
+    border-radius: 1.5rem !important; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important; 
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .schedule-card {
@@ -17,7 +19,7 @@ body {
 }
 .schedule-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px -5px rgba(30, 41, 59, 0.15); /* Slate/Dark shadow on hover */
+    box-shadow: 0 15px 35px -5px rgba(30, 41, 59, 0.15); 
 }
 
 /* Schedule Container & Grid Setup */
@@ -49,7 +51,7 @@ body {
 /* Day Columns */
 .day-column {
     min-height: 100%;
-    border-right: 1px solid #f1f5f9; /* Very light slate border */
+    border-right: 1px solid #f1f5f9; 
     padding: 0.5rem; 
     position: relative;
     z-index: 2; 
@@ -65,36 +67,90 @@ body {
     z-index: 3;
 }
 .day-header {
-    background-color: #f8fbfd; /* Very light background for headers */
-    box-shadow: none; /* Remove shadow to look cleaner */
+    background-color: #f8fbfd; 
+    box-shadow: none; 
 }
 
-/* Time Slots (Classes): Sharper look */
+/* Time Slots (Classes): Cleaner definition */
 .time-slot {
     position: absolute;
     width: calc(100% - 1rem); 
     left: 0.5rem;
     border-radius: 0.5rem; 
     transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* Clean definition */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); 
     padding: 0.75rem; 
     z-index: 5; 
-    border-left-width: 6px; /* Slightly thicker color bar */
+    border-left-width: 6px; 
 }
 .time-slot:hover {
     z-index: 10;
-    transform: scale(1.02); /* Less aggressive scale */
+    transform: scale(1.02); 
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Time Marker Styling */
 .time-marker-text {
-    color: #94a3b8; /* Tailwind slate-400, softer than before */
-    font-size: 0.75rem; /* Smaller font */
+    color: #94a3b8; 
+    font-size: 0.75rem; 
     font-weight: 500;
     line-height: 1; 
     transform: translateY(-50%); 
 }
+
+/* --- DARK THEME OVERRIDES --- */
+
+.dark-theme {
+    /* Main Background */
+    background: #1e293b; 
+    background-image: radial-gradient(#1e293b, #0f172a); 
+    color: #f8fafc; 
+}
+
+/* General Text and Elements */
+.dark-theme .text-indigo-900,
+.dark-theme .text-indigo-700,
+.dark-theme .text-gray-800 { color: #93c5fd !important; }
+.dark-theme .text-gray-700,
+.dark-theme .text-gray-500 { color: #cbd5e1 !important; }
+
+/* Dashboard Cards (Main Content Boxes) */
+.dark-theme .bg-white {
+    background-color: #334155 !important; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Day Headers and Toggles */
+.dark-theme .day-header {
+    background-color: #475569; 
+}
+.dark-theme #lang-toggle,
+.dark-theme #theme-toggle {
+    background-color: #475569 !important; 
+    color: #f8fafc !important;
+}
+
+/* Schedule Grid and Markers */
+.dark-theme .time-marker-text {
+    color: #94a3b8 !important; 
+}
+.dark-theme .day-column {
+    border-right: 1px solid #475569; 
+}
+.dark-theme .time-grid-lines {
+    background-image: 
+        repeating-linear-gradient(to bottom, transparent, transparent 66.6px, #475569 66.6px, #475569 67.6px);
+}
+
+/* Time Slot Text Contrast Fixes (Ensuring visibility on dark backgrounds) */
+.dark-theme .text-blue-800 { color: #93c5fd !important; }
+.dark-theme .text-purple-800 { color: #c084fc !important; }
+.dark-theme .text-green-800 { color: #4ade80 !important; }
+.dark-theme .text-red-800 { color: #f87171 !important; }
+.dark-theme .text-yellow-800 { color: #facc15 !important; }
+.dark-theme .text-pink-800 { color: #f472b6 !important; }
+.dark-theme .text-teal-800 { color: #2dd4bf !important; }
+.dark-theme .text-orange-800 { color: #fb923c !important; }
 
 /* Responsive Adjustments (Keep these for mobile usability) */
 @media (max-width: 768px) {
