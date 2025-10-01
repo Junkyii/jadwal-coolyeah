@@ -2,7 +2,7 @@
 /* Body Background Change */
 body {
     /* Use a light gradient instead of plain gray-100 */
-    background: #f8fafc; /* Tailwind bg-slate-50 */
+    background: #0000; /* Tailwind bg-slate-50 */
     background-image: radial-gradient(#ffffff, #f0f4f8);
 }
 
