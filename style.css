@@ -29,7 +29,7 @@ body {
     height: 600px; 
     position: relative;
     width: 100%;
-    /* Mengaktifkan Grid Display */
+    /* Mengaktifkan Grid Display untuk perbaikan tumpukan kolom */
     display: grid; 
     grid-template-rows: auto 1fr; 
 }
