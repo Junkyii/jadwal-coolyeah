@@ -43,16 +43,12 @@ function generateMonthlySchedule(lang) {
     const container = document.getElementById('monthly-schedule-list');
     container.innerHTML = '';
     
-    // Tentukan hari ini dan hari Rabu terdekat sebagai awal jadwal
-    const today = new Date();
-    let startDate = new Date(today);
-    // Atur startDate ke hari Rabu terdekat (kode hari 3)
-    startDate.setDate(today.getDate() - today.getDay() + 3); 
-    if (startDate < today) {
-        startDate.setDate(startDate.getDate() + 7); // Jika Rabu sudah lewat, mulai Rabu minggu depan
-    }
+    // Tentukan tanggal mulai spesifik sesuai permintaan: Rabu, 8 Oktober 2025.
+    // Bulan dalam JavaScript dihitung dari 0 (Januari) hingga 11 (Desember), jadi Oktober adalah 9.
+    const startDate = new Date(2025, 9, 8); 
 
-    const dayOrder = { "Rabu": 1, "Jumat": 2, "Sabtu": 3 };
+    // Menggunakan 0 untuk Rabu (hari mulai), 2 untuk Jumat (offset 2 hari), dan 3 untuk Sabtu (offset 3 hari)
+    const dayOrder = { "Rabu": 0, "Jumat": 2, "Sabtu": 3 }; 
     const maxWeeks = 4; // Target 1 bulan
     
     // Urutkan data kelas berdasarkan hari dan jam
@@ -78,12 +74,11 @@ function generateMonthlySchedule(lang) {
 
         // Tambahkan kelas untuk minggu ini
         sortedClassData.forEach(cls => {
-            // Hari Rabu=1, Jumat=2, Sabtu=3. (Mengacu pada sorted data)
-            const classDayCode = dayOrder[cls.day_id]; 
+            // Dapatkan offset hari dari Rabu (hari mulai)
+            const daysToAdd = dayOrder[cls.day_id]; 
             let classDate = new Date(weekStart);
             
-            // Hitung tanggal sebenarnya (0=Rabu, 2=Jumat, 3=Sabtu dari hari Rabu)
-            const daysToAdd = classDayCode - 1; 
+            // Tambahkan offset hari ke tanggal mulai minggu ini
             classDate.setDate(weekStart.getDate() + daysToAdd);
 
             // Format tanggal: DD MMMM YYYY
