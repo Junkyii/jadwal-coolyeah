@@ -4,123 +4,81 @@ body {
     background: #f0f7fa; 
     background-image: radial-gradient(#ffffff, #f0f7fa);
     font-family: sans-serif; 
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Theme Styles */
+body.dark-theme {
+    background: #0f172a;
+    background-image: radial-gradient(#1e293b, #0f172a);
+    color: #e2e8f0;
+}
+
+body.dark-theme .bg-gray-100 {
+    background-color: #0f172a !important;
+}
+
+body.dark-theme .bg-white {
+    background-color: #1e293b !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-theme .text-gray-800,
+body.dark-theme .text-gray-700,
+body.dark-theme .text-gray-600 {
+    color: #e2e8f0 !important;
+}
+
+body.dark-theme .text-gray-500 {
+    color: #94a3b8 !important;
+}
+
+body.dark-theme .text-indigo-900 {
+    color: #a5b4fc !important;
+}
+
+body.dark-theme .text-indigo-700 {
+    color: #818cf8 !important;
+}
+
+body.dark-theme .day-header {
+    background-color: #334155 !important;
+}
+
+body.dark-theme .time-grid-lines {
+    background-image: 
+        repeating-linear-gradient(to bottom, transparent, transparent 66.6px, #334155 66.6px, #334155 67.6px);
+}
+
+body.dark-theme .day-column {
+    border-right-color: #334155;
+}
+
+body.dark-theme .time-marker-col {
+    border-right-color: #334155;
+}
+
+body.dark-theme .time-marker-text {
+    color: #64748b;
+}
+
+body.dark-theme #theme-toggle,
+body.dark-theme #lang-toggle {
+    background-color: #334155 !important;
+    color: #a5b4fc !important;
+}
+
+body.dark-theme #theme-toggle:hover,
+body.dark-theme #lang-toggle:hover {
+    background-color: #475569 !important;
+}
+
+body.dark-theme .bg-indigo-600 {
+    background-color: #4f46e5 !important;
+}
+
+body.dark-theme .schedule-card:hover {
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
 }
 
 /* General Card and Element Styling */
-.bg-white {
-    border-radius: 1.5rem !important; 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important; 
-    transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.schedule-card {
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-.schedule-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px -5px rgba(30, 41, 59, 0.15); 
-}
-
-/* Schedule Container & Grid Setup */
-.schedule-grid-container {
-    /* Custom Grid Layout: 80px for Time | 3 Equal Day Columns */
-    grid-template-columns: 80px 1fr 1fr 1fr; 
-    height: 600px; 
-    position: relative;
-    width: 100%;
-    /* Mengaktifkan Grid Display untuk perbaikan tumpukan kolom */
-    display: grid; 
-    grid-template-rows: auto 1fr; 
-}
-
-/* Time Grid Lines: Very light and subtle dashed lines */
-.time-grid-lines {
-    background-image: 
-        repeating-linear-gradient(to bottom, transparent, transparent 66.6px, #e5e7eb 66.6px, #e5e7eb 67.6px); 
-    background-size: 100% calc(100% / 9); 
-    
-    grid-column: 2 / 5; 
-    grid-row: 2 / 3;
-    
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 50px; 
-    left: 80px; 
-    z-index: 1;
-}
-
-/* Day Columns */
-.day-column {
-    min-height: 100%;
-    border-right: 1px solid #f1f5f9; 
-    padding: 0.5rem; 
-    position: relative;
-    z-index: 2; 
-    grid-row: 1 / 3; 
-    grid-column: auto;
-}
-.day-column-last {
-    border-right: none;
-}
-.time-marker-col {
-    grid-row: 1 / 3;
-    border-right: 1px solid #f1f5f9;
-    z-index: 3;
-}
-.day-header {
-    background-color: #f8fbfd; 
-    box-shadow: none; 
-}
-
-/* Time Slots (Classes): Cleaner definition */
-.time-slot {
-    position: absolute;
-    width: calc(100% - 1rem); 
-    left: 0.5rem;
-    border-radius: 0.5rem; 
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); 
-    padding: 0.75rem; 
-    z-index: 5; 
-    border-left-width: 6px; 
-}
-.time-slot:hover {
-    z-index: 10;
-    transform: scale(1.02); 
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-}
-
-/* Time Marker Styling */
-.time-marker-text {
-    color: #94a3b8; 
-    font-size: 0.75rem; 
-    font-weight: 500;
-    line-height: 1; 
-    transform: translateY(-50%); 
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .schedule-grid-container {
-        grid-template-columns: 1fr;
-        height: auto;
-        min-height: auto;
-        display: block;
-    }
-    .day-column {
-        border-right: none;
-        border-bottom: 1px solid #e0e7ff;
-    }
-    .time-grid-lines,
-    .time-marker-col {
-        display: none !important; 
-    }
-    .time-slot {
-        position: relative; 
-        top: auto !important;
-        height: auto !important;
-        margin-bottom: 0.5rem;
-    }
-}
