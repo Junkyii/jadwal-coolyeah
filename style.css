@@ -4,7 +4,7 @@ body {
     background: #f0f7fa; 
     background-image: radial-gradient(#ffffff, #f0f7fa);
     font-family: sans-serif; 
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 /* Dark Theme Styles */
